@@ -19,6 +19,8 @@ type unitOfWork struct {
 }
 
 func (u *unitOfWork) Commit() (err error) {
+	defer u.reset()
+
 	conn, err := u.pool.getConn()
 	if err != nil {
 		return
@@ -97,4 +99,10 @@ func (u *unitOfWork) deleteQueue(sql string, args ...interface{}) {
 		sql:  sql,
 		args: args,
 	})
+}
+
+func (u *unitOfWork) reset() {
+	u.addOfQueue = make([]commitQueueInfo, 0)
+	u.updateOfQueue = make([]commitQueueInfo, 0)
+	u.deleteOfQueue = make([]commitQueueInfo, 0)
 }
