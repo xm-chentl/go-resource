@@ -27,7 +27,7 @@ type unitOfWork struct {
 	updateQueue   []commitQueueInfo
 }
 
-func (u unitOfWork) Commit() (err error) {
+func (u *unitOfWork) Commit() (err error) {
 	defer u.reset()
 
 	var collectionDb *mongo.Collection
